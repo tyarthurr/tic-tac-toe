@@ -1,6 +1,7 @@
 #include <iostream>
 
 std::string clearBoard(std::string targetBoard);
+void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard);
 
 int main() 
 {
@@ -21,6 +22,7 @@ int main()
 		"	Z = Undo the previous move\n"
 		"	H = Help (shows available moves)\n"
 		"	E = End game and quit program\n";
+
 	std::string blueprintBoard =
 		"             \n"
 		"  1 | 2 | 3  \n"
@@ -33,30 +35,12 @@ int main()
 	//Initialise game
 	std::cout << gameDescription + blueprintBoard;
 	std::string newBoard = clearBoard(blueprintBoard);
-	char menuInput;
+	char menuInput = ' ';
 	bool validInput = false;
 
 	//Game experience
 	std::cout << "Input the 'N' command to start a new game:\n";
-	while (validInput != true)
-	{
-		std::cin >> menuInput;
-		if (menuInput == 'N')
-		{
-			validInput = true;
-			std::cout << newBoard;
-		}
-		else if (menuInput == 'E')
-		{
-			validInput = true;
-			EXIT_SUCCESS;
-		}
-		else
-		{
-			validInput = false;
-			std::cout << "This is not a valid command. Input the 'N' command to start a new game:\n";
-		}
-	}
+	menuCommand(validInput, menuInput, newBoard);
 
 	//Keep the game running until player decides to quit
 	while (menuInput != 'E')
@@ -80,4 +64,27 @@ std::string clearBoard(std::string targetBoard)
 	targetBoard[80] = ' ';
 
 	return targetBoard;
+}
+
+void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard)
+{
+	while (targetValidInput != true)
+	{
+		std::cin >> targetMenuInput;
+		if (targetMenuInput == 'N')
+		{
+			targetValidInput = true;
+			std::cout << targetBoard;
+		}
+		else if (targetMenuInput == 'E')
+		{
+			targetValidInput = true;
+			std::exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			targetValidInput = false;
+			std::cout << "This is not a valid command. Input the 'N' command to start a new game:\n";
+		}
+	}
 }
