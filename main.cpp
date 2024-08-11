@@ -2,6 +2,7 @@
 
 std::string clearBoard(std::string targetBoard);
 void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard);
+std::string playerGameplay(std::string player, char playerChar, int playerMovePosition, std::string targetBoard);
 
 int main() 
 {
@@ -34,16 +35,28 @@ int main()
 
 	//Initialise game
 	std::cout << gameDescription + blueprintBoard;
-	std::string newBoard = clearBoard(blueprintBoard);
+	std::string activeBoard = clearBoard(blueprintBoard);
 	char menuInput = ' ';
 	bool validInput = false;
+	std::string playerOne;
+	std::string playerTwo;
+	int playerOneMovePosition = 0;
+	int playerTwoMovePosition = 0;
+	char playerOneChar = 'O';
+	char playerTwoChar = 'X';
 
 	//Game experience
 	std::cout << "Input the 'N' command to start a new game:\n";
-	menuCommand(validInput, menuInput, newBoard);
+	menuCommand(validInput, menuInput, activeBoard);
+	std::cout << "Player 1, enter your name:\n";
+	std::cin >> playerOne;
+	std::cout << "Player 2, enter your name:\n";
+	std::cin >> playerTwo;
+	playerGameplay(playerOne, playerOneChar, playerOneMovePosition, activeBoard);
+	
 
 	//Keep the game running until player decides to quit
-	while (menuInput != 'E')
+	while(menuInput != 'E')
 	{
 		continue;
 	}
@@ -51,6 +64,7 @@ int main()
 	return 0;
 }
 
+//replaces any character in specified string position with *space* whichc orresponds to grid spaces on the game board
 std::string clearBoard(std::string targetBoard)
 {
 	targetBoard[16] = ' ';
@@ -66,17 +80,18 @@ std::string clearBoard(std::string targetBoard)
 	return targetBoard;
 }
 
+//forces player to either create new board or quit game
 void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard)
 {
-	while (targetValidInput != true)
+	while(targetValidInput != true)
 	{
 		std::cin >> targetMenuInput;
-		if (targetMenuInput == 'N')
+		if(targetMenuInput == 'N')
 		{
 			targetValidInput = true;
 			std::cout << targetBoard;
 		}
-		else if (targetMenuInput == 'E')
+		else if(targetMenuInput == 'E')
 		{
 			targetValidInput = true;
 			std::exit(EXIT_SUCCESS);
@@ -88,3 +103,40 @@ void menuCommand(bool targetValidInput, char targetMenuInput, std::string target
 		}
 	}
 }
+
+//events when a player makes a move (player is determined by whichever player variable is in the function call argument)
+std::string playerGameplay(std::string player, char playerChar, int playerMovePosition, std::string targetBoard)
+{
+	std::cout << player << ", which space on the grid would you like to place your character?\n";
+	std::cin >> playerMovePosition;
+	switch(playerMovePosition)
+	{
+	case 1:
+		targetBoard[16] = playerChar;
+	case 2:
+		targetBoard[20] = playerChar;
+	case 3:
+		targetBoard[24] = playerChar;
+	case 4:
+		targetBoard[44] = playerChar;
+	case 5:
+		targetBoard[48] = playerChar;
+	case 6:
+		targetBoard[52] = playerChar;
+	case 7:
+		targetBoard[72] = playerChar;
+	case 8:
+		targetBoard[76] = playerChar;
+	case 9:
+		targetBoard[80] = playerChar;
+	default:
+		std::cout << "This is an invalid move.";
+	}
+
+	return targetBoard;
+}
+
+/*OBJECTIVE:
+* make the switch case work properly
+* clean up unnecessary main variables being used as arguments and parameters for functions when these variables can be made within just the function scope instead
+*/
