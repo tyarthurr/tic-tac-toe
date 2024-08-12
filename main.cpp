@@ -1,8 +1,8 @@
 #include <iostream>
 
 std::string clearBoard(std::string targetBoard);
-void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard);
-std::string playerGameplay(std::string player, char playerChar, char playerMovePosition, std::string targetBoard);
+void menuCommand(char targetMenuInput, std::string targetBoard);
+std::string playerGameplay(std::string player, char playerChar, std::string targetBoard);
 
 int main() 
 {
@@ -37,22 +37,19 @@ int main()
 	std::cout << gameDescription + blueprintBoard;
 	std::string activeBoard = clearBoard(blueprintBoard);
 	char menuInput = ' ';
-	bool validInput = false;
 	std::string playerOne;
 	std::string playerTwo;
-	char playerOneMovePosition = '0';
-	char playerTwoMovePosition = '0';
 	char playerOneChar = 'O';
 	char playerTwoChar = 'X';
 
 	//Game experience
 	std::cout << "Input the 'N' command to start a new game:\n";
-	menuCommand(validInput, menuInput, activeBoard);
+	menuCommand(menuInput, activeBoard);
 	std::cout << "Player 1, enter your name:\n";
 	std::cin >> playerOne;
 	std::cout << "Player 2, enter your name:\n";
 	std::cin >> playerTwo;
-	playerGameplay(playerOne, playerOneChar, playerOneMovePosition, activeBoard);
+	playerGameplay(playerOne, playerOneChar, activeBoard);
 
 	//Keep the game running until player decides to quit
 	while(menuInput != 'E')
@@ -80,8 +77,9 @@ std::string clearBoard(std::string targetBoard)
 }
 
 //forces player to either create new board or quit game
-void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard)
+void menuCommand(char targetMenuInput, std::string targetBoard)
 {
+	bool targetValidInput = false;
 	while(targetValidInput != true)
 	{
 		std::cin >> targetMenuInput;
@@ -104,8 +102,9 @@ void menuCommand(bool targetValidInput, char targetMenuInput, std::string target
 }
 
 //events when a player makes a move (player is determined by whichever player variable is in the function call argument)
-std::string playerGameplay(std::string player, char playerChar, char playerMovePosition, std::string targetBoard)
+std::string playerGameplay(std::string player, char playerChar, std::string targetBoard)
 {
+	char playerMovePosition;
 	std::cout << player << ", which space on the grid would you like to place your character?\n";
 	std::cin >> playerMovePosition;
 
@@ -148,5 +147,6 @@ std::string playerGameplay(std::string player, char playerChar, char playerMoveP
 }
 
 /*OBJECTIVE:
-* clean up unnecessary main variables being used as arguments and parameters for functions when these variables can be made within just the function scope instead
+* continue with gameplay
+* set a winning parameter
 */
