@@ -2,7 +2,7 @@
 
 std::string clearBoard(std::string targetBoard);
 void menuCommand(bool targetValidInput, char targetMenuInput, std::string targetBoard);
-std::string playerGameplay(std::string player, char playerChar, int playerMovePosition, std::string targetBoard);
+std::string playerGameplay(std::string player, char playerChar, char playerMovePosition, std::string targetBoard);
 
 int main() 
 {
@@ -40,8 +40,8 @@ int main()
 	bool validInput = false;
 	std::string playerOne;
 	std::string playerTwo;
-	int playerOneMovePosition = 0;
-	int playerTwoMovePosition = 0;
+	char playerOneMovePosition = '0';
+	char playerTwoMovePosition = '0';
 	char playerOneChar = 'O';
 	char playerTwoChar = 'X';
 
@@ -53,7 +53,6 @@ int main()
 	std::cout << "Player 2, enter your name:\n";
 	std::cin >> playerTwo;
 	playerGameplay(playerOne, playerOneChar, playerOneMovePosition, activeBoard);
-	
 
 	//Keep the game running until player decides to quit
 	while(menuInput != 'E')
@@ -105,38 +104,49 @@ void menuCommand(bool targetValidInput, char targetMenuInput, std::string target
 }
 
 //events when a player makes a move (player is determined by whichever player variable is in the function call argument)
-std::string playerGameplay(std::string player, char playerChar, int playerMovePosition, std::string targetBoard)
+std::string playerGameplay(std::string player, char playerChar, char playerMovePosition, std::string targetBoard)
 {
 	std::cout << player << ", which space on the grid would you like to place your character?\n";
 	std::cin >> playerMovePosition;
+
 	switch(playerMovePosition)
 	{
-	case 1:
+	case '1':
 		targetBoard[16] = playerChar;
-	case 2:
+		break;
+	case '2':
 		targetBoard[20] = playerChar;
-	case 3:
+		break;
+	case '3':
 		targetBoard[24] = playerChar;
-	case 4:
+		break;
+	case '4':
 		targetBoard[44] = playerChar;
-	case 5:
+		break;
+	case '5':
 		targetBoard[48] = playerChar;
-	case 6:
+		break;
+	case '6':
 		targetBoard[52] = playerChar;
-	case 7:
+		break;
+	case '7':
 		targetBoard[72] = playerChar;
-	case 8:
+		break;
+	case '8':
 		targetBoard[76] = playerChar;
-	case 9:
+		break;
+	case '9':
 		targetBoard[80] = playerChar;
+		break;
 	default:
 		std::cout << "This is an invalid move.";
+		break;
 	}
 
+	std::cout << targetBoard;
 	return targetBoard;
 }
 
 /*OBJECTIVE:
-* make the switch case work properly
 * clean up unnecessary main variables being used as arguments and parameters for functions when these variables can be made within just the function scope instead
 */
