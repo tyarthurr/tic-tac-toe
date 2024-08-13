@@ -49,7 +49,10 @@ int main()
 	std::cin >> playerOne;
 	std::cout << "Player 2, enter your name:\n";
 	std::cin >> playerTwo;
-	playerGameplay(playerOne, playerOneChar, activeBoard);
+	activeBoard = playerGameplay(playerOne, playerOneChar, activeBoard);
+	std::cout << activeBoard;
+	activeBoard = playerGameplay(playerTwo, playerTwoChar, activeBoard);
+	std::cout << activeBoard;
 
 	//Keep the game running until player decides to quit
 	while(menuInput != 'E')
@@ -104,49 +107,127 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 //events when a player makes a move (player is determined by whichever player variable is in the function call argument)
 std::string playerGameplay(std::string player, char playerChar, std::string targetBoard)
 {
+	bool invalidMove = false;
 	char playerMovePosition;
 	std::cout << player << ", which space on the grid would you like to place your character?\n";
 	std::cin >> playerMovePosition;
 
-	switch(playerMovePosition)
+	while(invalidMove == false)
 	{
-	case '1':
-		targetBoard[16] = playerChar;
-		break;
-	case '2':
-		targetBoard[20] = playerChar;
-		break;
-	case '3':
-		targetBoard[24] = playerChar;
-		break;
-	case '4':
-		targetBoard[44] = playerChar;
-		break;
-	case '5':
-		targetBoard[48] = playerChar;
-		break;
-	case '6':
-		targetBoard[52] = playerChar;
-		break;
-	case '7':
-		targetBoard[72] = playerChar;
-		break;
-	case '8':
-		targetBoard[76] = playerChar;
-		break;
-	case '9':
-		targetBoard[80] = playerChar;
-		break;
-	default:
-		std::cout << "This is an invalid move.";
-		break;
+		switch (playerMovePosition)
+		{
+		case '1':
+			if (targetBoard[16] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[16] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '2':
+			if (targetBoard[20] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[20] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '3':
+			if (targetBoard[24] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[24] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '4':
+			if (targetBoard[44] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[44] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '5':
+			if (targetBoard[48] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[48] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '6':
+			if (targetBoard[52] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[52] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '7':
+			if (targetBoard[72] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[72] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '8':
+			if (targetBoard[76] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[76] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		case '9':
+			if (targetBoard[80] == 'O' || 'X')
+			{
+				std::cout << "This is an invalid move.";
+			}
+			else
+			{
+				targetBoard[80] = playerChar;
+				invalidMove = true;
+				break;
+			}
+		default:
+			std::cout << "This is an invalid move.";
+			break;
+		}
 	}
 
-	std::cout << targetBoard;
 	return targetBoard;
 }
 
 /*OBJECTIVE:
-* continue with gameplay
-* set a winning parameter
+* create a rule to invalidate overwriting previous moves
+*	now its looping indefinitely...
+* set a winning parameter and create a rule to detect the parameter
+* maybe instead of hardcoding each turn, create a loop to repeat the back and forth until the winning parameter has been met 
+*	or no moves are able to be made without overwiting a previous move
 */
