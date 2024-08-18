@@ -1,9 +1,7 @@
 /*OBJECTIVE:
-- FIX: user currently wins if a combination of O and X fills a winning line whereas it should only be one or the other filling a winning line that determines the win
-- FIX: prevention of move overwiting only occurs once - on the second attempt, an unintentional overwrite occurs
-- FIX: move overwiting prevention is inconsistent or not working for player 1
-- FIX: creating a new game after an endgame, breaks while loop and runs into programmer-defined undefined behaviour error and also doesn't clear board
-- FIX: occurrence endgame behaviour seems inconsistent?
+- FIX: after endgame behaviour has been actioned and board has been cleared, move overwrite prevention function bugs out on new game board 
+	(thinking all gridspaces from previous game are still filled)
+
 */
 
 #include <iostream>
@@ -15,7 +13,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 
 int main() 
 {
-	//Game description
+	//game description
 	std::string gameDescription =
 		"Welcome to the game of Tic-Tac-Toe!\n"
 		"	The game is played on a grid that is 3 squares by 3 squares.\n"
@@ -42,7 +40,7 @@ int main()
 		"  7 | 8 | 9  \n"
 		"             \n";
 
-	//Initialise game
+	//initialise game
 	std::cout << gameDescription + blueprintBoard;
 	std::string activeBoard = clearBoard(blueprintBoard);
 	char menuInput = ' ';
@@ -52,7 +50,7 @@ int main()
 	char playerTwoChar = 'X';
 	bool endgame = false;
 
-	//Game experience
+	//new game experience
 	std::cout << "Input the 'N' command to start a new game:\n";
 	menuCommand(menuInput, activeBoard);
 	std::cout << "Player 1, enter your name:\n";
@@ -60,11 +58,18 @@ int main()
 	std::cout << "Player 2, enter your name:\n";
 	std::cin >> playerTwo;
 
+	//gameplay experience
 	while(endgame == false)
 	{
 		activeBoard = playerGameplay(playerOne, playerOneChar, activeBoard);
 		std::cout << activeBoard;
 		endgame = endgameCheck(playerOne, playerOneChar, activeBoard, endgame);
+
+		if (endgame == true)
+		{
+			std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
+			menuCommand(menuInput, activeBoard);
+		}
 
 		activeBoard = playerGameplay(playerTwo, playerTwoChar, activeBoard);
 		std::cout << activeBoard;
@@ -74,11 +79,6 @@ int main()
 		{
 			std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
 			menuCommand(menuInput, activeBoard);
-			continue;
-		}
-		else
-		{
-			continue;
 		}
 	}
 
@@ -118,6 +118,15 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 		if(targetMenuInput == 'N')
 		{
 			targetValidInput = true;
+			targetBoard[16] = ' ';
+			targetBoard[20] = ' ';
+			targetBoard[24] = ' ';
+			targetBoard[44] = ' ';
+			targetBoard[48] = ' ';
+			targetBoard[52] = ' ';
+			targetBoard[72] = ' ';
+			targetBoard[76] = ' ';
+			targetBoard[80] = ' ';
 			std::cout << targetBoard;
 		}
 		else if(targetMenuInput == 'E')
@@ -146,9 +155,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 		switch(playerMovePosition)
 		{
 		case '1':
-			if(targetBoard[16] == 'O' && 'X')
+			if(targetBoard[16] == 'X' || targetBoard[16] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -158,9 +168,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '2':
-			if(targetBoard[20] == 'O' && 'X')
+			if(targetBoard[20] == 'X' || targetBoard[20] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -170,9 +181,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '3':
-			if(targetBoard[24] == 'O' && 'X')
+			if(targetBoard[24] == 'X' || targetBoard[24] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -182,9 +194,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '4':
-			if(targetBoard[44] == 'O' && 'X')
+			if(targetBoard[44] == 'X' || targetBoard[44] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -194,9 +207,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '5':
-			if(targetBoard[48] == 'O' && 'X')
+			if(targetBoard[48] == 'X' || targetBoard[48] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -206,9 +220,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '6':
-			if(targetBoard[52] == 'O' && 'X')
+			if(targetBoard[52] == 'X' || targetBoard[52] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -218,9 +233,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '7':
-			if(targetBoard[72] == 'O' && 'X')
+			if(targetBoard[72] == 'X' || targetBoard[72] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -230,9 +246,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '8':
-			if(targetBoard[76] == 'O' && 'X')
+			if(targetBoard[76] == 'X' || targetBoard[76] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -242,9 +259,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				break;
 			}
 		case '9':
-			if(targetBoard[80] == 'O' && 'X')
+			if(targetBoard[80] == 'X' || targetBoard[80] == 'O')
 			{
 				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
 				break;
 			}
 			else
@@ -255,6 +273,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 			}
 		default:
 			std::cout << "This is an invalid move.\n";
+			invalidMove = false;
 			break;
 		}
 	}
@@ -262,72 +281,77 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 	return targetBoard;
 }
 
+//check if a player's characters are present on all grid spaces that would make up a winning line - if so, start endgame behaviour otherwise continue game
 bool endgameCheck(std::string playerName, char playerChar, std::string targetBoard, bool endgameValidity)
 {
-	char topHorizontalLine[] =
-	{
-		topHorizontalLine[0] = targetBoard[16],
-		topHorizontalLine[1] = targetBoard[20],
-		topHorizontalLine[2] = targetBoard[24]
-	};
-	char midHorizontalLine[] =
-	{
-		midHorizontalLine[0] = targetBoard[44],
-		midHorizontalLine[1] = targetBoard[48],
-		midHorizontalLine[2] = targetBoard[52]
-	};
-	char bottHorizontalLine[] =
-	{
-		bottHorizontalLine[0] = targetBoard[72],
-		bottHorizontalLine[1] = targetBoard[76],
-		bottHorizontalLine[2] = targetBoard[80]
-	};
-	char leftVerticalLine[] =
-	{
-		leftVerticalLine[0] = targetBoard[16],
-		leftVerticalLine[1] = targetBoard[44],
-		leftVerticalLine[2] = targetBoard[72]
-	};
-	char midVerticalLine[] =
-	{
-		midVerticalLine[0] = targetBoard[20],
-		midVerticalLine[1] = targetBoard[48],
-		midVerticalLine[2] = targetBoard[76]
-	};
-	char rightVerticalLine[] =
-	{
-		rightVerticalLine[0] = targetBoard[24],
-		rightVerticalLine[1] = targetBoard[52],
-		rightVerticalLine[2] = targetBoard[80]
-	};
-	char decDiagonalLine[] =
-	{
-		decDiagonalLine[0] = targetBoard[16],
-		decDiagonalLine[1] = targetBoard[48],
-		decDiagonalLine[2] = targetBoard[80]
-	};
-	char incDiagonalLine[] =
-	{
-		incDiagonalLine[0] = targetBoard[72],
-		incDiagonalLine[1] = targetBoard[48],
-		incDiagonalLine[2] = targetBoard[24]
-	};
-	char winningLine[] =
-	{
-		winningLine[0] = topHorizontalLine[0, 1, 2],
-		winningLine[1] = midHorizontalLine[0, 1, 2],
-		winningLine[2] = bottHorizontalLine[0, 1, 2],
-		winningLine[3] = leftVerticalLine[0, 1, 2],
-		winningLine[4] = midVerticalLine[0, 1, 2],
-		winningLine[5] = rightVerticalLine[0, 1, 2],
-		winningLine[6] = decDiagonalLine[0, 1, 2],
-		winningLine[7] = incDiagonalLine[0, 1, 2]
-	};
-
-	if(winningLine[0, 1, 2, 3, 4, 5, 6, 7] == playerChar)
+	//top horizontal line
+	if(targetBoard[16] == playerChar &&
+	targetBoard[20] == playerChar &&
+	targetBoard[24] == playerChar)
 	{
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
+	}
+	//mid horizontal line
+	else if(targetBoard[44] == playerChar &&
+		targetBoard[48] == playerChar &&
+		targetBoard[52] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//bottom horizontal line
+	else if (targetBoard[72] == playerChar &&
+		targetBoard[76] == playerChar &&
+		targetBoard[80] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//left vertical line
+	else if (targetBoard[16] == playerChar &&
+		targetBoard[44] == playerChar &&
+		targetBoard[72] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//mid vertical line
+	else if (targetBoard[20] == playerChar &&
+		targetBoard[48] == playerChar &&
+		targetBoard[76] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//right vertical line
+	else if (targetBoard[24] == playerChar &&
+		targetBoard[52] == playerChar &&
+		targetBoard[80] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//decline diagonal line
+	else if (targetBoard[16] == playerChar &&
+		targetBoard[48] == playerChar &&
+		targetBoard[80] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//incline diagonal line
+	else if (targetBoard[72] == playerChar &&
+		targetBoard[48] == playerChar &&
+		targetBoard[24] == playerChar)
+	{
+		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+	//if no winning lines are present
+	else
+	{
+		endgameValidity = false;
 	}
 
 	return endgameValidity;
