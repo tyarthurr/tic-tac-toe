@@ -1,7 +1,6 @@
 /*OBJECTIVE:
-- FIX: after endgame behaviour has been actioned and board has been cleared, move overwrite prevention function bugs out on new game board 
-	(thinking all gridspaces from previous game are still filled)
-
+- feature: when both players have run out of available moves, draw the game and give the option to create new game or exit
+- feature: singleplayer option: 2nd player becomes a RNG that randomly places moves
 */
 
 #include <iostream>
@@ -42,7 +41,9 @@ int main()
 
 	//initialise game
 	std::cout << gameDescription + blueprintBoard;
-	std::string activeBoard = clearBoard(blueprintBoard);
+	std::string activeBoard;
+	std::string *pActiveBoard = &activeBoard;
+	*pActiveBoard = clearBoard(blueprintBoard);
 	char menuInput = ' ';
 	std::string playerOne;
 	std::string playerTwo;
@@ -68,7 +69,9 @@ int main()
 		if (endgame == true)
 		{
 			std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
-			menuCommand(menuInput, activeBoard);
+			*pActiveBoard = clearBoard(blueprintBoard);
+			menuCommand(menuInput, *pActiveBoard);
+			endgame = false;
 		}
 
 		activeBoard = playerGameplay(playerTwo, playerTwoChar, activeBoard);
@@ -78,7 +81,9 @@ int main()
 		if (endgame == true)
 		{
 			std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
-			menuCommand(menuInput, activeBoard);
+			*pActiveBoard = clearBoard(blueprintBoard);
+			menuCommand(menuInput, *pActiveBoard);
+			endgame = false;
 		}
 	}
 
@@ -118,15 +123,6 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 		if(targetMenuInput == 'N')
 		{
 			targetValidInput = true;
-			targetBoard[16] = ' ';
-			targetBoard[20] = ' ';
-			targetBoard[24] = ' ';
-			targetBoard[44] = ' ';
-			targetBoard[48] = ' ';
-			targetBoard[52] = ' ';
-			targetBoard[72] = ' ';
-			targetBoard[76] = ' ';
-			targetBoard[80] = ' ';
 			std::cout << targetBoard;
 		}
 		else if(targetMenuInput == 'E')
