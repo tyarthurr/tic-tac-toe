@@ -1,6 +1,5 @@
 /*OBJECTIVE:
-- feature: when both players have run out of available moves, draw the game and give the option to create new game or exit
-- feature: singleplayer option: 2nd player becomes a RNG that randomly places moves
+- feature: singleplayer option: 2nd player becomes a "computer" (RNG that randomly places moves)
 */
 
 #include <iostream>
@@ -87,8 +86,8 @@ int main()
 		}
 	}
 
-	//If user has not deliberately exited and compiler has gone past the above while loop, display undefined behaviour error for debugging and continue program instance
-	std::cout << "Error: Undefined Behaviour";
+	//if user has not deliberately exited and compiler has gone out of the gameplay bounds, display undefined behaviour error for debugging and continue program instance
+	std::cerr << "Error: Undefined Behaviour";
 	while(menuInput != 'E')
 	{
 		continue;
@@ -280,14 +279,40 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 //check if a player's characters are present on all grid spaces that would make up a winning line - if so, start endgame behaviour otherwise continue game
 bool endgameCheck(std::string playerName, char playerChar, std::string targetBoard, bool endgameValidity)
 {
+	//if draw - no moves available
+	bool gridspace1 = (targetBoard[16] == 'X' || targetBoard[16] == 'O');
+	bool gridspace2 = (targetBoard[20] == 'X' || targetBoard[20] == 'O');
+	bool gridspace3 = (targetBoard[24] == 'X' || targetBoard[24] == 'O');
+	bool gridspace4 = (targetBoard[44] == 'X' || targetBoard[44] == 'O');
+	bool gridspace5 = (targetBoard[48] == 'X' || targetBoard[48] == 'O');
+	bool gridspace6 = (targetBoard[52] == 'X' || targetBoard[52] == 'O');
+	bool gridspace7 = (targetBoard[72] == 'X' || targetBoard[72] == 'O');
+	bool gridspace8 = (targetBoard[76] == 'X' || targetBoard[76] == 'O');
+	bool gridspace9 = (targetBoard[80] == 'X' || targetBoard[80] == 'O');
+
+	if (gridspace1 &&
+		gridspace2 &&
+		gridspace3 &&
+		gridspace4 &&
+		gridspace5 &&
+		gridspace6 &&
+		gridspace7 &&
+		gridspace8 &&
+		gridspace9)
+	{
+		std::cout << "Draw! No more moves are available.\n";
+		endgameValidity = true;
+	}
+
 	//top horizontal line
-	if(targetBoard[16] == playerChar &&
+	else if(targetBoard[16] == playerChar &&
 	targetBoard[20] == playerChar &&
 	targetBoard[24] == playerChar)
 	{
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//mid horizontal line
 	else if(targetBoard[44] == playerChar &&
 		targetBoard[48] == playerChar &&
@@ -296,6 +321,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//bottom horizontal line
 	else if (targetBoard[72] == playerChar &&
 		targetBoard[76] == playerChar &&
@@ -304,6 +330,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//left vertical line
 	else if (targetBoard[16] == playerChar &&
 		targetBoard[44] == playerChar &&
@@ -312,6 +339,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//mid vertical line
 	else if (targetBoard[20] == playerChar &&
 		targetBoard[48] == playerChar &&
@@ -320,6 +348,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//right vertical line
 	else if (targetBoard[24] == playerChar &&
 		targetBoard[52] == playerChar &&
@@ -328,6 +357,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//decline diagonal line
 	else if (targetBoard[16] == playerChar &&
 		targetBoard[48] == playerChar &&
@@ -336,6 +366,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//incline diagonal line
 	else if (targetBoard[72] == playerChar &&
 		targetBoard[48] == playerChar &&
@@ -344,6 +375,7 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		std::cout << playerName << " wins!\n";
 		endgameValidity = true;
 	}
+
 	//if no winning lines are present
 	else
 	{
