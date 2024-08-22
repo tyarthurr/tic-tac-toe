@@ -1,12 +1,13 @@
 /*OBJECTIVE:
-- feature: singleplayer option: 2nd player becomes a "computer" (RNG that randomly places moves)
+- debug singleplayer implementation
 */
 
 #include <iostream>
+#include <cstdlib>
 
 std::string clearBoard(std::string targetBoard);
 void menuCommand(char targetMenuInput, std::string targetBoard);
-std::string playerGameplay(std::string player, char playerChar, std::string targetBoard);
+std::string playerGameplay(std::string player, char playerChar, std::string targetBoard, bool computerMode = false, int singleplayerOnlyComputerRNG = 0);
 bool endgameCheck(std::string playerName, char playerChar, std::string targetBoard, bool endgameValidity);
 
 int main() 
@@ -44,6 +45,10 @@ int main()
 	std::string *pActiveBoard = &activeBoard;
 	*pActiveBoard = clearBoard(blueprintBoard);
 	char menuInput = ' ';
+	int gamemode;
+	bool validGamemode = false;
+	std::string computerName = "COMPUTER";
+	int computerBrain = rand() % 10;
 	std::string playerOne;
 	std::string playerTwo;
 	char playerOneChar = 'O';
@@ -53,41 +58,100 @@ int main()
 	//new game experience
 	std::cout << "Input the 'N' command to start a new game:\n";
 	menuCommand(menuInput, activeBoard);
-	std::cout << "Player 1, enter your name:\n";
-	std::cin >> playerOne;
-	std::cout << "Player 2, enter your name:\n";
-	std::cin >> playerTwo;
 
-	//gameplay experience
-	while(endgame == false)
+	while (validGamemode == false)
 	{
-		activeBoard = playerGameplay(playerOne, playerOneChar, activeBoard);
-		std::cout << activeBoard;
-		endgame = endgameCheck(playerOne, playerOneChar, activeBoard, endgame);
-
-		if (endgame == true)
+		std::cout << "Choose a gamemode (input the number representing each listed gameplay option below to select that gamemode):\n"
+			<< "1 - Singleplayer (Player vs Computer)\n" << "2 - Multiplayer (Player vs Player)\n";
+		std::cin >> gamemode;
+		if (gamemode != 1 && gamemode != 2)
 		{
-			std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
-			*pActiveBoard = clearBoard(blueprintBoard);
-			menuCommand(menuInput, *pActiveBoard);
-			endgame = false;
+			std::cout << "This is an invalid gamemode selection. Try again.\n";
+			validGamemode = false;
 		}
-
-		activeBoard = playerGameplay(playerTwo, playerTwoChar, activeBoard);
-		std::cout << activeBoard;
-		endgame = endgameCheck(playerTwo, playerTwoChar, activeBoard, endgame);
-
-		if (endgame == true)
+		else
 		{
-			std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
-			*pActiveBoard = clearBoard(blueprintBoard);
-			menuCommand(menuInput, *pActiveBoard);
-			endgame = false;
+			validGamemode = true;
+		}
+	}
+	
+	//singleplayer gameplay
+	if (gamemode == 1)
+	{
+		bool initialiseComputerGameplay = true;
+		std::cout << "Player 1, enter your name:\n";
+		std::cin >> playerOne;
+
+		while (endgame == false)
+		{
+			activeBoard = playerGameplay(playerOne, playerOneChar, activeBoard);
+			std::cout << activeBoard;
+			endgame = endgameCheck(playerOne, playerOneChar, activeBoard, endgame);
+
+			if (endgame == true)
+			{
+				std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
+				*pActiveBoard = clearBoard(blueprintBoard);
+				menuCommand(menuInput, *pActiveBoard);
+				endgame = false;
+			}
+
+			activeBoard = playerGameplay(computerName, playerTwoChar, activeBoard, initialiseComputerGameplay, computerBrain);
+			std::cout << activeBoard;
+			endgame = endgameCheck(computerName, playerTwoChar, activeBoard, endgame);
+
+			if (endgame == true)
+			{
+				std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
+				*pActiveBoard = clearBoard(blueprintBoard);
+				menuCommand(menuInput, *pActiveBoard);
+				endgame = false;
+			}
 		}
 	}
 
-	//if user has not deliberately exited and compiler has gone out of the gameplay bounds, display undefined behaviour error for debugging and continue program instance
-	std::cerr << "Error: Undefined Behaviour";
+	//mutiplayer gameplay
+	else if (gamemode == 2)
+	{
+		std::cout << "Player 1, enter your name:\n";
+		std::cin >> playerOne;
+		std::cout << "Player 2, enter your name:\n";
+		std::cin >> playerTwo;
+
+		while (endgame == false)
+		{
+			activeBoard = playerGameplay(playerOne, playerOneChar, activeBoard);
+			std::cout << activeBoard;
+			endgame = endgameCheck(playerOne, playerOneChar, activeBoard, endgame);
+
+			if (endgame == true)
+			{
+				std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
+				*pActiveBoard = clearBoard(blueprintBoard);
+				menuCommand(menuInput, *pActiveBoard);
+				endgame = false;
+			}
+
+			activeBoard = playerGameplay(playerTwo, playerTwoChar, activeBoard);
+			std::cout << activeBoard;
+			endgame = endgameCheck(playerTwo, playerTwoChar, activeBoard, endgame);
+
+			if (endgame == true)
+			{
+				std::cout << "Input the 'N' command to start a new game or input the 'E' command to exit the game:\n";
+				*pActiveBoard = clearBoard(blueprintBoard);
+				menuCommand(menuInput, *pActiveBoard);
+				endgame = false;
+			}
+		}
+	}
+
+	//if user has not deliberately exited and compiler has gone out of the gameplay bounds (above), display error for debugging and continue program instance
+	else
+	{
+		std::cerr << "Error: The main function has gone out of bounds.";
+	}
+
 	while(menuInput != 'E')
 	{
 		continue;
@@ -138,139 +202,272 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 }
 
 //events when a player makes a move (player is determined by whichever player variable is in the function call argument)
-std::string playerGameplay(std::string playerName, char playerChar, std::string targetBoard)
+std::string playerGameplay(std::string playerName, char playerChar, std::string targetBoard, bool computerMode, int singleplayerOnlyComputerRNG)
 {
 	bool invalidMove = false;
-	char playerMovePosition;
-	std::cout << playerName << ", which space on the grid would you like to place your character?\n";
-
-	while(invalidMove == false)
+	
+	//computer gameplay
+	if (computerMode == true)
 	{
-		std::cin >> playerMovePosition;
-		switch(playerMovePosition)
+		while (invalidMove == false)
 		{
-		case '1':
-			if(targetBoard[16] == 'X' || targetBoard[16] == 'O')
+			switch (singleplayerOnlyComputerRNG)
 			{
-				std::cout << "This is an invalid move.\n";
+			case 1:
+				if (targetBoard[16] == 'X' || targetBoard[16] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[16] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 2:
+				if (targetBoard[20] == 'X' || targetBoard[20] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[20] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 3:
+				if (targetBoard[24] == 'X' || targetBoard[24] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[24] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 4:
+				if (targetBoard[44] == 'X' || targetBoard[44] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[44] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 5:
+				if (targetBoard[48] == 'X' || targetBoard[48] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[48] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 6:
+				if (targetBoard[52] == 'X' || targetBoard[52] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[52] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 7:
+				if (targetBoard[72] == 'X' || targetBoard[72] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[72] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 8:
+				if (targetBoard[76] == 'X' || targetBoard[76] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[76] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case 9:
+				if (targetBoard[80] == 'X' || targetBoard[80] == 'O')
+				{
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[80] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			default:
 				invalidMove = false;
 				break;
 			}
-			else
-			{
-				targetBoard[16] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '2':
-			if(targetBoard[20] == 'X' || targetBoard[20] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[20] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '3':
-			if(targetBoard[24] == 'X' || targetBoard[24] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[24] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '4':
-			if(targetBoard[44] == 'X' || targetBoard[44] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[44] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '5':
-			if(targetBoard[48] == 'X' || targetBoard[48] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[48] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '6':
-			if(targetBoard[52] == 'X' || targetBoard[52] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[52] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '7':
-			if(targetBoard[72] == 'X' || targetBoard[72] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[72] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '8':
-			if(targetBoard[76] == 'X' || targetBoard[76] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[76] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		case '9':
-			if(targetBoard[80] == 'X' || targetBoard[80] == 'O')
-			{
-				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
-				break;
-			}
-			else
-			{
-				targetBoard[80] = playerChar;
-				invalidMove = true;
-				break;
-			}
-		default:
-			std::cout << "This is an invalid move.\n";
-			invalidMove = false;
-			break;
 		}
+	}
+
+	//player gameplay
+	else if (computerMode == false)
+	{
+		char playerMovePosition;
+		std::cout << playerName << ", which space on the grid would you like to place your character?\n";
+
+		while (invalidMove == false)
+		{
+			std::cin >> playerMovePosition;
+			switch (playerMovePosition)
+			{
+			case '1':
+				if (targetBoard[16] == 'X' || targetBoard[16] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[16] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '2':
+				if (targetBoard[20] == 'X' || targetBoard[20] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[20] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '3':
+				if (targetBoard[24] == 'X' || targetBoard[24] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[24] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '4':
+				if (targetBoard[44] == 'X' || targetBoard[44] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[44] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '5':
+				if (targetBoard[48] == 'X' || targetBoard[48] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[48] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '6':
+				if (targetBoard[52] == 'X' || targetBoard[52] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[52] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '7':
+				if (targetBoard[72] == 'X' || targetBoard[72] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[72] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '8':
+				if (targetBoard[76] == 'X' || targetBoard[76] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[76] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			case '9':
+				if (targetBoard[80] == 'X' || targetBoard[80] == 'O')
+				{
+					std::cout << "This is an invalid move.\n";
+					invalidMove = false;
+					break;
+				}
+				else
+				{
+					targetBoard[80] = playerChar;
+					invalidMove = true;
+					break;
+				}
+			default:
+				std::cout << "This is an invalid move.\n";
+				invalidMove = false;
+				break;
+			}
+		}
+	}
+
+	//undefined situations deserve an error
+	else
+	{
+		std::cerr << "Error: The gameplay function has gone out of bounds.\n";
 	}
 
 	return targetBoard;
