@@ -1,13 +1,14 @@
 /*OBJECTIVE:
-- debug singleplayer implementation
+- debug singleplayer implementation: after players first move, program idles
 */
 
 #include <iostream>
-#include <cstdlib>
+#include <ctime>
+#include <random>
 
 std::string clearBoard(std::string targetBoard);
 void menuCommand(char targetMenuInput, std::string targetBoard);
-std::string playerGameplay(std::string player, char playerChar, std::string targetBoard, bool computerMode = false, int singleplayerOnlyComputerRNG = 0);
+std::string playerGameplay(std::string player, char playerChar, std::string targetBoard, bool computerMode = false);
 bool endgameCheck(std::string playerName, char playerChar, std::string targetBoard, bool endgameValidity);
 
 int main() 
@@ -48,7 +49,6 @@ int main()
 	int gamemode;
 	bool validGamemode = false;
 	std::string computerName = "COMPUTER";
-	int computerBrain = rand() % 10;
 	std::string playerOne;
 	std::string playerTwo;
 	char playerOneChar = 'O';
@@ -96,7 +96,7 @@ int main()
 				endgame = false;
 			}
 
-			activeBoard = playerGameplay(computerName, playerTwoChar, activeBoard, initialiseComputerGameplay, computerBrain);
+			activeBoard = playerGameplay(computerName, playerTwoChar, activeBoard, initialiseComputerGameplay);
 			std::cout << activeBoard;
 			endgame = endgameCheck(computerName, playerTwoChar, activeBoard, endgame);
 
@@ -202,18 +202,24 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 }
 
 //events when a player makes a move (player is determined by whichever player variable is in the function call argument)
-std::string playerGameplay(std::string playerName, char playerChar, std::string targetBoard, bool computerMode, int singleplayerOnlyComputerRNG)
+std::string playerGameplay(std::string playerName, char playerChar, std::string targetBoard, bool computerMode)
 {
 	bool invalidMove = false;
 	
 	//computer gameplay
 	if (computerMode == true)
 	{
+		unsigned computerBrainSeed = static_cast<unsigned>(std::time(0));
+		std::mt19937 computerBrainRNG(computerBrainSeed);
+		std::uniform_int_distribution<> computerBrainSeedRange(0, 9);
+		int computerBrain = computerBrainSeedRange(computerBrainRNG);
+		static_cast<char>(computerBrain);
+
 		while (invalidMove == false)
 		{
-			switch (singleplayerOnlyComputerRNG)
+			switch (computerBrain)
 			{
-			case 1:
+			case '1':
 				if (targetBoard[16] == 'X' || targetBoard[16] == 'O')
 				{
 					invalidMove = false;
@@ -225,7 +231,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 2:
+			case '2':
 				if (targetBoard[20] == 'X' || targetBoard[20] == 'O')
 				{
 					invalidMove = false;
@@ -237,7 +243,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 3:
+			case '3':
 				if (targetBoard[24] == 'X' || targetBoard[24] == 'O')
 				{
 					invalidMove = false;
@@ -249,7 +255,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 4:
+			case '4':
 				if (targetBoard[44] == 'X' || targetBoard[44] == 'O')
 				{
 					invalidMove = false;
@@ -261,7 +267,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 5:
+			case '5':
 				if (targetBoard[48] == 'X' || targetBoard[48] == 'O')
 				{
 					invalidMove = false;
@@ -273,7 +279,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 6:
+			case '6':
 				if (targetBoard[52] == 'X' || targetBoard[52] == 'O')
 				{
 					invalidMove = false;
@@ -285,7 +291,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 7:
+			case '7':
 				if (targetBoard[72] == 'X' || targetBoard[72] == 'O')
 				{
 					invalidMove = false;
@@ -297,7 +303,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 8:
+			case '8':
 				if (targetBoard[76] == 'X' || targetBoard[76] == 'O')
 				{
 					invalidMove = false;
@@ -309,7 +315,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 					invalidMove = true;
 					break;
 				}
-			case 9:
+			case '9':
 				if (targetBoard[80] == 'X' || targetBoard[80] == 'O')
 				{
 					invalidMove = false;
