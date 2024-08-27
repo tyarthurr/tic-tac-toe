@@ -22,7 +22,7 @@ int main()
 		"		Note: Use the example grid as a reference. The grid spaces at the start of a new game will be blank.\n"
 		"	Type in a number then press 'Enter' on your keyboard to place your character in the corresponding grid space.\n\n"
 		"Legend:\n"
-		"	N = New game (ends any ongoing game)\n"
+		"	N = New game\n"
 		"	E = End game and quit program\n";
 
 	std::string blueprintBoard =
