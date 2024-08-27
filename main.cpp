@@ -1,7 +1,3 @@
-/*OBJECTIVE:
-- debug singleplayer implementation:
-*/
-
 #include <iostream>
 #include <ctime>
 #include <random>
@@ -27,8 +23,6 @@ int main()
 		"	Type in a number then press 'Enter' on your keyboard to place your character in the corresponding grid space.\n\n"
 		"Legend:\n"
 		"	N = New game (ends any ongoing game)\n"
-		"	Z = Undo the previous move\n"
-		"	H = Help (shows available moves)\n"
 		"	E = End game and quit program\n";
 
 	std::string blueprintBoard =
@@ -40,7 +34,7 @@ int main()
 		"  7 | 8 | 9  \n"
 		"             \n";
 
-	//initialise game
+	//initialise game variables
 	std::cout << gameDescription + blueprintBoard;
 	std::string activeBoard;
 	std::string *pActiveBoard = &activeBoard;
@@ -160,7 +154,7 @@ int main()
 	return 0;
 }
 
-//replaces any character in specified string position with *space* whichc orresponds to grid spaces on the game board
+//replaces any character in specified string position with empty space which corresponds to grid spaces on the game board
 std::string clearBoard(std::string targetBoard)
 {
 	targetBoard[16] = ' ';
@@ -201,7 +195,7 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 	}
 }
 
-//events when a player makes a move (player is determined by whichever player variable is in the function call argument)
+//events when a player makes a move
 std::string playerGameplay(std::string playerName, char playerChar, std::string targetBoard, bool computerMode)
 {
 	bool validMove = false;
@@ -216,135 +210,117 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 			std::uniform_int_distribution<> computerBrainSeedRange(1, 9);
 			int computerBrain = computerBrainSeedRange(computerBrainRNG);
 
-			if (computerBrain == 1)
+			switch (computerBrain)
 			{
+			case 1:
 				if (targetBoard[16] == 'X' || targetBoard[16] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[16] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 2)
-			{
+			case 2:
 				if (targetBoard[20] == 'X' || targetBoard[20] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[20] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 3)
-			{
+			case 3:
 				if (targetBoard[24] == 'X' || targetBoard[24] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[24] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 4)
-			{
+			case 4:
 				if (targetBoard[44] == 'X' || targetBoard[44] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[44] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 5)
-			{
+			case 5:
 				if (targetBoard[48] == 'X' || targetBoard[48] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[48] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 6)
-			{
+			case 6:
 				if (targetBoard[52] == 'X' || targetBoard[52] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[52] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 7)
-			{
+			case 7:
 				if (targetBoard[72] == 'X' || targetBoard[72] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[72] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 8)
-			{
+			case 8:
 				if (targetBoard[76] == 'X' || targetBoard[76] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[76] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else if (computerBrain == 9)
-			{
+			case 9:
 				if (targetBoard[80] == 'X' || targetBoard[80] == 'O')
 				{
-					std::cout << "false";
 					validMove = false;
+					break;
 				}
 				else
 				{
 					targetBoard[80] = playerChar;
-					std::cout << "true";
 					validMove = true;
+					break;
 				}
-			}
-			else
-			{
-				std::cout << "default\n";
+			default:
 				validMove = false;
 			}
 		}
@@ -495,10 +471,10 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 	return targetBoard;
 }
 
-//check if a player's characters are present on all grid spaces that would make up a winning line - if so, start endgame behaviour otherwise continue game
+//check if a player's characters are present on all grid spaces that would make up a winning line or actually in all spaces
+//if so, start endgame (win/loss/draw) behaviour otherwise continue game
 bool endgameCheck(std::string playerName, char playerChar, std::string targetBoard, bool endgameValidity)
 {
-	//if draw - no moves available
 	bool gridspace1 = (targetBoard[16] == 'X' || targetBoard[16] == 'O');
 	bool gridspace2 = (targetBoard[20] == 'X' || targetBoard[20] == 'O');
 	bool gridspace3 = (targetBoard[24] == 'X' || targetBoard[24] == 'O');
@@ -509,22 +485,8 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 	bool gridspace8 = (targetBoard[76] == 'X' || targetBoard[76] == 'O');
 	bool gridspace9 = (targetBoard[80] == 'X' || targetBoard[80] == 'O');
 
-	if (gridspace1 &&
-		gridspace2 &&
-		gridspace3 &&
-		gridspace4 &&
-		gridspace5 &&
-		gridspace6 &&
-		gridspace7 &&
-		gridspace8 &&
-		gridspace9)
-	{
-		std::cout << "Draw! No more moves are available.\n";
-		endgameValidity = true;
-	}
-
 	//top horizontal line
-	else if(targetBoard[16] == playerChar &&
+	if(targetBoard[16] == playerChar &&
 	targetBoard[20] == playerChar &&
 	targetBoard[24] == playerChar)
 	{
@@ -592,6 +554,21 @@ bool endgameCheck(std::string playerName, char playerChar, std::string targetBoa
 		targetBoard[24] == playerChar)
 	{
 		std::cout << playerName << " wins!\n";
+		endgameValidity = true;
+	}
+
+	//no more moves available - draw
+	else if (gridspace1 &&
+		gridspace2 &&
+		gridspace3 &&
+		gridspace4 &&
+		gridspace5 &&
+		gridspace6 &&
+		gridspace7 &&
+		gridspace8 &&
+		gridspace9)
+	{
+		std::cout << "Draw! No more moves are available.\n";
 		endgameValidity = true;
 	}
 
