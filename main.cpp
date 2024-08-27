@@ -13,7 +13,7 @@ int main()
 	std::string gameDescription =
 		"Welcome to the game of Tic-Tac-Toe!\n"
 		"	The game is played on a grid that is 3 squares by 3 squares.\n"
-		"	The first player is X, and the second player is O.\n"
+		"	The first player is O, and the second player is X.\n"
 		"	Players take turns putting their marks in empty squares.\n"
 		"	The first player to get 3 of their marks in a row (up, down, across, or diagonally) is the winner.\n\n"
 		"How to play:\n"
