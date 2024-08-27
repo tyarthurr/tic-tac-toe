@@ -1,5 +1,5 @@
 /*OBJECTIVE:
-- debug singleplayer implementation: after players first move, program idles
+- debug singleplayer implementation:
 */
 
 #include <iostream>
@@ -204,132 +204,148 @@ void menuCommand(char targetMenuInput, std::string targetBoard)
 //events when a player makes a move (player is determined by whichever player variable is in the function call argument)
 std::string playerGameplay(std::string playerName, char playerChar, std::string targetBoard, bool computerMode)
 {
-	bool invalidMove = false;
+	bool validMove = false;
 	
 	//computer gameplay
 	if (computerMode == true)
 	{
-		unsigned computerBrainSeed = static_cast<unsigned>(std::time(0));
-		std::mt19937 computerBrainRNG(computerBrainSeed);
-		std::uniform_int_distribution<> computerBrainSeedRange(0, 9);
-		int computerBrain = computerBrainSeedRange(computerBrainRNG);
-		static_cast<char>(computerBrain);
-
-		while (invalidMove == false)
+		while (validMove == false)
 		{
-			switch (computerBrain)
+			int computerBrainSeed = static_cast<unsigned int>(std::time(0));
+			std::mt19937 computerBrainRNG(computerBrainSeed);
+			std::uniform_int_distribution<> computerBrainSeedRange(1, 9);
+			int computerBrain = computerBrainSeedRange(computerBrainRNG);
+
+			if (computerBrain == 1)
 			{
-			case '1':
 				if (targetBoard[16] == 'X' || targetBoard[16] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[16] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '2':
+			}
+			else if (computerBrain == 2)
+			{
 				if (targetBoard[20] == 'X' || targetBoard[20] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[20] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '3':
+			}
+			else if (computerBrain == 3)
+			{
 				if (targetBoard[24] == 'X' || targetBoard[24] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[24] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '4':
+			}
+			else if (computerBrain == 4)
+			{
 				if (targetBoard[44] == 'X' || targetBoard[44] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[44] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '5':
+			}
+			else if (computerBrain == 5)
+			{
 				if (targetBoard[48] == 'X' || targetBoard[48] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[48] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '6':
+			}
+			else if (computerBrain == 6)
+			{
 				if (targetBoard[52] == 'X' || targetBoard[52] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[52] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '7':
+			}
+			else if (computerBrain == 7)
+			{
 				if (targetBoard[72] == 'X' || targetBoard[72] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[72] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '8':
+			}
+			else if (computerBrain == 8)
+			{
 				if (targetBoard[76] == 'X' || targetBoard[76] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[76] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			case '9':
+			}
+			else if (computerBrain == 9)
+			{
 				if (targetBoard[80] == 'X' || targetBoard[80] == 'O')
 				{
-					invalidMove = false;
-					break;
+					std::cout << "false";
+					validMove = false;
 				}
 				else
 				{
 					targetBoard[80] = playerChar;
-					invalidMove = true;
-					break;
+					std::cout << "true";
+					validMove = true;
 				}
-			default:
-				invalidMove = false;
-				break;
+			}
+			else
+			{
+				std::cout << "default\n";
+				validMove = false;
 			}
 		}
 	}
@@ -340,7 +356,7 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 		char playerMovePosition;
 		std::cout << playerName << ", which space on the grid would you like to place your character?\n";
 
-		while (invalidMove == false)
+		while (validMove == false)
 		{
 			std::cin >> playerMovePosition;
 			switch (playerMovePosition)
@@ -349,122 +365,122 @@ std::string playerGameplay(std::string playerName, char playerChar, std::string 
 				if (targetBoard[16] == 'X' || targetBoard[16] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[16] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '2':
 				if (targetBoard[20] == 'X' || targetBoard[20] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[20] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '3':
 				if (targetBoard[24] == 'X' || targetBoard[24] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[24] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '4':
 				if (targetBoard[44] == 'X' || targetBoard[44] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[44] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '5':
 				if (targetBoard[48] == 'X' || targetBoard[48] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[48] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '6':
 				if (targetBoard[52] == 'X' || targetBoard[52] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[52] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '7':
 				if (targetBoard[72] == 'X' || targetBoard[72] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[72] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '8':
 				if (targetBoard[76] == 'X' || targetBoard[76] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[76] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			case '9':
 				if (targetBoard[80] == 'X' || targetBoard[80] == 'O')
 				{
 					std::cout << "This is an invalid move.\n";
-					invalidMove = false;
+					validMove = false;
 					break;
 				}
 				else
 				{
 					targetBoard[80] = playerChar;
-					invalidMove = true;
+					validMove = true;
 					break;
 				}
 			default:
 				std::cout << "This is an invalid move.\n";
-				invalidMove = false;
+				validMove = false;
 				break;
 			}
 		}
